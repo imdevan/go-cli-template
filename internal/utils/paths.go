@@ -3,6 +3,8 @@ package utils
 import (
 	"os"
 	"path/filepath"
+
+	"go-cli-template/internal/package"
 )
 
 // XDGConfigHome returns the config home directory with sensible defaults.
@@ -22,12 +24,12 @@ func XDGCacheHome() string {
 
 // ConfigPathGlobal returns the default global config file path.
 func ConfigPathGlobal() string {
-	return filepath.Join(XDGConfigHome(), "go-cli-template", "config.toml")
+	return filepath.Join(XDGConfigHome(), pkg.Name(), "config.toml")
 }
 
 // ConfigPathLocal returns the local config file path for the given cwd.
 func ConfigPathLocal(cwd string) string {
-	return filepath.Join(cwd, ".go-cli-template", "config.toml")
+	return filepath.Join(cwd, "."+pkg.Name(), "config.toml")
 }
 
 func xdgHome(envKey, fallbackSuffix string) string {

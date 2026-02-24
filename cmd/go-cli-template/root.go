@@ -14,16 +14,16 @@ import (
 
 	"go-cli-template/internal/config"
 	"go-cli-template/internal/domain"
+	pkg "go-cli-template/internal/package"
 	"go-cli-template/internal/ui"
 	"go-cli-template/internal/utils"
 )
 
-// Managed in: 	package.toml
-// To update: 	just sync
+// Metadata loaded from package.toml at build time
 var (
-	version = "0.1.0"
-	name    = "go-cli-template"
-	short   = "A generic CLI tool template"
+	version = pkg.Version()
+	name    = pkg.Name()
+	short   = pkg.Short()
 )
 
 type rootOptions struct {

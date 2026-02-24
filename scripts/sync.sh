@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Script to sync project files from package.toml
-# package.toml is the source of truth for project metadata
+# internal/package/package.toml is the source of truth for project metadata
 
 # Colors
 RED='\033[0;31m'
@@ -10,7 +10,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-PACKAGE_FILE="package.toml"
+PACKAGE_FILE="internal/package/package.toml"
 
 if [ ! -f "$PACKAGE_FILE" ]; then
   echo -e "${RED}Error: $PACKAGE_FILE not found${NC}"
@@ -70,8 +70,7 @@ fi
 
 # Update config paths
 if [ "$CURRENT_NAME" != "$PROJECT_NAME" ]; then
-  echo "Updating config paths..."
-  sed -i "s|$CURRENT_NAME|$PROJECT_NAME|g" internal/utils/paths.go
+  echo "Config paths will be updated from package.toml at build time..."
 
   # Rename cmd directory first
   if [ -d "cmd/$CURRENT_NAME" ] && [ "$CURRENT_NAME" != "$PROJECT_NAME" ]; then
@@ -96,24 +95,6 @@ if [ -n "$DESCRIPTION" ]; then
   echo "Updating README description..."
   # Update the first description line after the title
   sed -i "2s|.*|$DESCRIPTION|" README.md
-fi
-
-# Update version in root.go
-if [ -n "$VERSION" ]; then
-  echo "Updating version in root.go..."
-  find cmd -name "root.go" -type f -exec sed -i "s|version = \".*\"|version = \"$VERSION\"|g" {} \;
-fi
-
-# Update name in root.go
-if [ -n "$PROJECT_NAME" ]; then
-  echo "Updating name in root.go..."
-  find cmd -name "root.go" -type f -exec sed -i "s|name    = \".*\"|name    = \"$PROJECT_NAME\"|g" {} \;
-fi
-
-# Update short description in root.go
-if [ -n "$SHORT_DESC" ]; then
-  echo "Updating short description in root.go..."
-  find cmd -name "root.go" -type f -exec sed -i "s|short   = \".*\"|short   = \"$SHORT_DESC\"|g" {} \;
 fi
 
 echo ""

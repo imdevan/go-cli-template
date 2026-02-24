@@ -1,5 +1,5 @@
 # Package information - source of truth for project metadata
-# Run ./scripts/sync.sh after modifying this file
+# Run just sync after modifying this file
 
 name = "go-cli-template"
 module = "go-cli-template"

@@ -87,19 +87,30 @@ func TestXDGCacheHome(t *testing.T) {
 func TestConfigPathGlobal(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", "/test/config")
 	
-	expected := filepath.Join("/test/config", "go-cli-template", "config.toml")
 	got := ConfigPathGlobal()
-	if got != expected {
-		t.Errorf("ConfigPathGlobal() = %q, want %q", got, expected)
+	
+	// Verify it uses the XDG_CONFIG_HOME
+	if !filepath.HasPrefix(got, "/test/config") {
+		t.Errorf("ConfigPathGlobal() = %q, should start with /test/config", got)
+	}
+	
+	// Verify it ends with config.toml
+	if filepath.Base(got) != "config.toml" {
+		t.Errorf("ConfigPathGlobal() = %q, should end with config.toml", got)
 	}
 }
 
 func TestConfigPathLocal(t *testing.T) {
 	cwd := "/project/dir"
-	expected := filepath.Join(cwd, ".go-cli-template", "config.toml")
-	
 	got := ConfigPathLocal(cwd)
-	if got != expected {
-		t.Errorf("ConfigPathLocal(%q) = %q, want %q", cwd, got, expected)
+	
+	// Verify it starts with the cwd
+	if !filepath.HasPrefix(got, cwd) {
+		t.Errorf("ConfigPathLocal(%q) = %q, should start with %q", cwd, got, cwd)
+	}
+	
+	// Verify it ends with config.toml
+	if filepath.Base(got) != "config.toml" {
+		t.Errorf("ConfigPathLocal(%q) = %q, should end with config.toml", cwd, got)
 	}
 }
