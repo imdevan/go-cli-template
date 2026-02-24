@@ -1,0 +1,4 @@
+editor = "nvim"
+
+[remap_short_flags]
+directory = "D"

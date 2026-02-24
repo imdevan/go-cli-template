@@ -1,0 +1,11 @@
+# Package information - source of truth for project metadata
+# Run ./scripts/sync.sh after modifying this file
+
+name = "go-cli-template"
+module = "go-cli-template"
+description = "A generic CLI tool template built with Go, Cobra, and Bubble Tea"
+short = "A generic CLI tool template"
+version = "0.1.0"
+homepage = ""
+repository = ""
+author = ""

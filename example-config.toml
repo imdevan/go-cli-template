@@ -1,0 +1,22 @@
+# General
+editor = "nvim"
+
+# CLI behavior
+interactive_default = true
+
+# UI
+# list_spacing options: compact (title only), tight (title + description, no margin), space (default, with spacing)
+list_spacing = "space"
+
+# Colors
+# Colors support named, numeric, or hex values (ex: 7, 13, "#ff8800").
+headings = "15"
+primary = "02"
+secondary = "06"
+text = "07"
+text_highlight = "06"
+description_highlight = "05"
+tags = "13"
+flags = "12"
+muted = "08"
+border = "08"

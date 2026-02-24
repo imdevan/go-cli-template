@@ -1,0 +1,19 @@
+pkgname=__PKGNAME__
+pkgver=__PKGVER__
+pkgrel=1
+pkgdesc="__DESCRIPTION__"
+arch=('x86_64' 'aarch64')
+url="__HOMEPAGE__"
+license=('MIT')
+makedepends=('go')
+source=("${pkgname}-${pkgver}.tar.gz::__SOURCE_URL__")
+sha256sums=('__SHA256__')
+
+build() {
+  cd "$srcdir/${pkgname}-${pkgver}"
+  go build -trimpath -ldflags "-s -w -X main.version=v${pkgver}" -o ${pkgname} ./cmd/${pkgname}
+}
+
+package() {
+  install -Dm755 "$srcdir/${pkgname}-${pkgver}/${pkgname}" "$pkgdir/usr/bin/${pkgname}"
+}
