@@ -1,0 +1,17 @@
+/* Custom styles for go-cli-template docs */
+
+:root {
+  --sl-color-accent-low: #1a2332;
+  --sl-color-accent: #4a9eff;
+  --sl-color-accent-high: #b3d9ff;
+}
+
+/* Code block improvements */
+pre {
+  border-radius: 8px;
+}
+
+/* Better spacing for API docs */
+.api-section {
+  margin-top: 2rem;
+}

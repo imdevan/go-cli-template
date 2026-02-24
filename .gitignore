@@ -1,5 +1,12 @@
 .gocache
 bin
+dist
+
+# Documentation
+docs/node_modules/
+docs/dist/
+docs/.astro/
+docs/src/content/docs/api/
 
 gh_pages_docs
 

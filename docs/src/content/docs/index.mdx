@@ -1,0 +1,72 @@
+---
+title: go-cli-template
+description: A generic CLI tool template built with Go, Cobra, and Bubble Tea
+template: splash
+hero:
+  tagline: Build interactive command-line applications with a clean architecture and modern UI components
+  actions:
+    - text: Get Started
+      link: /guides/quickstart/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/imdevan/go-cli-template
+      icon: external
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Features
+
+<CardGrid>
+  <Card title="Interactive UI" icon="laptop">
+    Built with Bubble Tea for beautiful inline TUI components
+  </Card>
+  <Card title="Cobra CLI" icon="rocket">
+    Powerful command-line interface with subcommands and flags
+  </Card>
+  <Card title="Configuration" icon="setting">
+    TOML-based configuration with XDG Base Directory support
+  </Card>
+  <Card title="Shell Completion" icon="approve-check">
+    Auto-completion for bash, zsh, fish, and powershell
+  </Card>
+</CardGrid>
+
+## Quick Start
+
+```bash
+# Build and run
+just build-run
+
+# View configuration
+go-cli-template config
+
+# Generate shell completion
+go-cli-template completion bash > /etc/bash_completion.d/go-cli-template
+```
+
+## Architecture
+
+The project follows a clean architecture pattern:
+
+- **cmd/** - CLI entrypoint and commands
+- **internal/config** - Configuration management
+- **internal/domain** - Domain models
+- **internal/ui** - Bubble Tea UI components
+- **internal/utils** - Utility functions
+- **internal/adapters** - External service adapters
+
+## Next Steps
+
+<CardGrid>
+  <Card title="Installation" icon="rocket">
+    [Install go-cli-template](/guides/installation/) on your system
+  </Card>
+  <Card title="Configuration" icon="setting">
+    [Configure your setup](/guides/configuration/) with TOML
+  </Card>
+  <Card title="API Reference" icon="open-book">
+    [Explore the API](/api/config/) documentation
+  </Card>
+</CardGrid>

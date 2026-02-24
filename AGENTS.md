@@ -8,9 +8,11 @@
 - `example-config.toml`, `README.md`, and `INSTALL.md` document usage and configuration.
 
 ## Build, Test
-- `just build` builds the current platform binary.
-- `just test` runs all Go tests.
+use justfile
 
+### Built and Test Docs
+
+use bun. do not use npm
 ## Coding Style & Naming Conventions
 - Use Go standard formatting (`gofmt`) and idiomatic Go style.
 - Indentation: tabs in Go source, 2 spaces in Markdown/TOML.
