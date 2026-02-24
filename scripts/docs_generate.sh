@@ -3,7 +3,42 @@ set -euo pipefail
 
 # Generate API documentation from Go packages using gomarkdoc
 
+PACKAGE_FILE="internal/package/package.toml"
 DOCS_API_DIR="docs/src/content/docs/api"
+ASTRO_CONFIG="docs/astro.config.mjs"
+
+# Parse package.toml
+parse_toml() {
+  local key=$1
+  grep "^$key = " "$PACKAGE_FILE" | sed 's/^[^=]*= *"\(.*\)"$/\1/'
+}
+
+echo "📦 Reading package metadata..."
+PROJECT_NAME=$(parse_toml "name")
+DESCRIPTION=$(parse_toml "description")
+DOCS_SITE=$(parse_toml "docs_site")
+DOCS_BASE=$(parse_toml "docs_base")
+REPOSITORY=$(parse_toml "repository")
+
+echo "🔧 Updating Astro config..."
+# Update astro.config.mjs with values from package.toml
+if [ -f "$ASTRO_CONFIG" ]; then
+  # Create a temporary config with updated values
+  awk -v site="$DOCS_SITE" -v base="$DOCS_BASE" -v title="$PROJECT_NAME" -v desc="$DESCRIPTION" -v repo="$REPOSITORY" '
+    /^export default defineConfig\({/ {
+      print $0
+      print "  site: \"" site "\","
+      print "  base: \"" base "\","
+      next
+    }
+    /^  site:/ || /^  base:/ { next }
+    /title:/ { sub(/title: .*,/, "title: \"" title "\","); print; next }
+    /description:/ { sub(/description: .*,/, "description: \"" desc "\","); print; next }
+    /github:/ && repo != "" { sub(/github: .*,/, "github: \"" repo "\","); print; next }
+    { print }
+  ' "$ASTRO_CONFIG" > "${ASTRO_CONFIG}.tmp" && mv "${ASTRO_CONFIG}.tmp" "$ASTRO_CONFIG"
+  echo "  ✓ Updated site, base, title, and description"
+fi
 
 echo "🔧 Checking for gomarkdoc..."
 if ! command -v gomarkdoc &> /dev/null; then

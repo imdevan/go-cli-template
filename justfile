@@ -37,7 +37,7 @@ clean:
 # Documentation tasks
 docs-init:
 	@echo "📦 Installing documentation dependencies..."
-	cd docs && npm install
+	cd docs && bun install
 
 docs-generate:
 	@echo "📝 Generating API documentation from Go packages..."
@@ -46,16 +46,16 @@ docs-generate:
 docs-dev:
 	@echo "🚀 Starting documentation development server..."
 	@just docs-generate
-	cd docs && npm run dev
+	cd docs && bun run dev
 
 docs-build:
 	@echo "🏗️  Building documentation site..."
 	@just docs-generate
-	cd docs && npm run build
+	cd docs && bun run build
 
 docs-preview:
 	@echo "👀 Previewing built documentation..."
-	cd docs && npm run preview
+	cd docs && bun run preview
 
 docs-clean:
 	@echo "🧹 Cleaning documentation build artifacts..."
