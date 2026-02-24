@@ -2,7 +2,8 @@ set shell := ["zsh", "-cu"]
 
 build:
 	go build -o bin/go-cli-template ./cmd/go-cli-template
-	@ls -lh bin/go-cli-template | awk '{print "Build size: " $$5}'
+	@size=$(stat -c %s bin/go-cli-template 2>/dev/null || stat -f %z bin/go-cli-template 2>/dev/null); \
+	echo "Build size: $(awk "BEGIN {printf \"%.2f MB\", $size/1048576}")"
 
 build-run:
 	go build -o bin/go-cli-template ./cmd/go-cli-template && ./bin/go-cli-template
