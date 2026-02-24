@@ -93,8 +93,18 @@ fi
 # Update README description
 if [ -n "$DESCRIPTION" ]; then
   echo "Updating README description..."
-  # Update the first description line after the title
-  sed -i "2s|.*|$DESCRIPTION|" README.md
+  # Find and update the first paragraph after the title and image
+  # Skip lines starting with # or <img
+  awk -v desc="$DESCRIPTION" '
+    BEGIN { found=0; updated=0 }
+    /^#/ || /^<img/ || /^$/ { print; next }
+    !updated && !found { 
+      print desc; 
+      updated=1; 
+      next 
+    }
+    { print }
+  ' README.md > README.md.tmp && mv README.md.tmp README.md
 fi
 
 echo ""
