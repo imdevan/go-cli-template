@@ -3,7 +3,7 @@
 
 name = "go-cli-template"
 module = "go-cli-template"
-description = "A generic CLI tool template built with Go, Cobra, and Bubble Tea"
+description = "A generic CLI tool template built with Go, Cobra, and Bubble Tea. This template provides a foundation for building interactive command-line applications with a clean architecture and modern UI components."
 short = "A generic CLI tool template"
 version = "0.1.0"
 homepage = ""
