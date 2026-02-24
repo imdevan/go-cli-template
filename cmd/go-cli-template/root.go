@@ -56,7 +56,7 @@ func newRootCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&opts.configPath, "config", "c", "", "config file path")
-	cmd.Flags().BoolVarP(&opts.showVersion, "version", "V", false, "print version information")
+	cmd.Flags().BoolVarP(&opts.showVersion, "version", "v", false, "print version information")
 
 	cmd.AddCommand(newConfigCmd())
 	cmd.AddCommand(newCompletionCmd())
