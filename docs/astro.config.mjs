@@ -1,14 +1,21 @@
 import { defineConfig } from 'astro/config';
+import config from "./config.mjs"
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
+  site: config.url,
+  base: config.basePath,
   integrations: [
     starlight({
-      title: 'go-cli-template',
-      description: 'A generic CLI tool template built with Go, Cobra, and Bubble Tea',
+      title: config.title,
+      description: config.description,
       social: {
-        github: 'https://github.com/yourusername/go-cli-template',
+        github: config.github,
       },
+      editLink: {
+        baseUrl: config.githubDocs,
+      },
+
       sidebar: [
         {
           label: 'Getting Started',
