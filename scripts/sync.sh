@@ -73,20 +73,22 @@ if [ "$CURRENT_NAME" != "$PROJECT_NAME" ]; then
   echo "Updating config paths..."
   sed -i "s|$CURRENT_NAME|$PROJECT_NAME|g" internal/utils/paths.go
 
-  # Update completion examples
-  echo "Updating completion examples..."
-  sed -i "s|$CURRENT_NAME|$PROJECT_NAME|g" cmd/$MODULE_NAME/completion.go
+  # Rename cmd directory first
+  if [ -d "cmd/$CURRENT_NAME" ] && [ "$CURRENT_NAME" != "$PROJECT_NAME" ]; then
+    echo "Renaming cmd/$CURRENT_NAME to cmd/$PROJECT_NAME..."
+    mv "cmd/$CURRENT_NAME" "cmd/$PROJECT_NAME" 2>/dev/null || true
+  fi
+
+  # Update completion examples (after directory rename)
+  if [ -f "cmd/$PROJECT_NAME/completion.go" ]; then
+    echo "Updating completion examples..."
+    sed -i "s|$CURRENT_NAME|$PROJECT_NAME|g" cmd/$PROJECT_NAME/completion.go
+  fi
 
   # Update justfile
   echo "Updating justfile..."
   sed -i "s|bin/$CURRENT_NAME|bin/$PROJECT_NAME|g" justfile
   sed -i "s|./cmd/$CURRENT_NAME|./cmd/$PROJECT_NAME|g" justfile
-
-  # Rename cmd directory
-  if [ -d "cmd/$CURRENT_NAME" ] && [ "$CURRENT_NAME" != "$PROJECT_NAME" ]; then
-    echo "Renaming cmd/$CURRENT_NAME to cmd/$PROJECT_NAME..."
-    mv "cmd/$CURRENT_NAME" "cmd/$PROJECT_NAME" 2>/dev/null || true
-  fi
 fi
 
 # Update README description
