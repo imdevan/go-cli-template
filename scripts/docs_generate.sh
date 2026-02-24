@@ -34,11 +34,10 @@ if [ -f "$DOCS_CONFIG" ]; then
   cat >"$DOCS_CONFIG" <<EOF
 const stage = process.env.NODE_ENV || "dev"
 const isProduction = stage === "production"
-const basePath = isProduction ? "$DOCS_BASE" : ""
 
 export default {
-  url: isProduction ? "$DOCS_SITE$DOCS_BASE" : "http://localhost:4321",
-  basePath,
+  url: isProduction ? "$DOCS_SITE" : "http://localhost:4321",
+  basePath:  isProduction ? "$DOCS_BASE" : "/",
   github: "$REPOSITORY",
   githubDocs: "$REPOSITORY",
   title: "$PROJECT_NAME",

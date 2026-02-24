@@ -1,10 +1,9 @@
 const stage = process.env.NODE_ENV || "dev"
 const isProduction = stage === "production"
-const basePath = isProduction ? "/go-cli-template" : ""
 
 export default {
-  url: isProduction ? "https://devan.gg/go-cli-template" : "http://localhost:4321",
-  basePath,
+  url: isProduction ? "https://devan.gg" : "http://localhost:4321",
+  basePath:  isProduction ? "/go-cli-template" : "/",
   github: "https://github.com/imdevan/go-cli-template/",
   githubDocs: "https://github.com/imdevan/go-cli-template/",
   title: "go-cli-template",

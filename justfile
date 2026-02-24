@@ -51,7 +51,7 @@ docs-dev:
 docs-build:
 	@echo "🏗️  Building documentation site..."
 	@just docs-generate
-	cd docs && bun run build
+	cd docs && NODE_ENV=production bun run build
 
 docs-preview:
 	@echo "👀 Previewing built documentation..."
