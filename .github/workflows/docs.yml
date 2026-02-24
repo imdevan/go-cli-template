@@ -41,6 +41,8 @@ jobs:
         run: cd docs && bun install
 
       - name: Build documentation
+        env:
+          NODE_ENV: production
         run: cd docs && bun run build
 
       - name: Upload artifact
