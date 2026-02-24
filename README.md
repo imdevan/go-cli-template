@@ -10,8 +10,9 @@ A generic CLI tool template built with Go, Cobra, and Bubble Tea. This template 
 - [Built on go Cobra](https://github.com/spf13/cobra)
 - Configuration management with TOML
 - Styles, build scripts, and tests to get you started.
-- homebrew and aur package management with TOML too!
 - [Inline Bubble Tea TUI components](https://github.com/charmbracelet/bubbletea)
+- Homebrew and aur package management with TOML too!
+- Automatic documentation with [gomarkdoc](https://github.com/princjef/gomarkdoc) and [astro starlight](https://starlight.astro.build/)
 - XDG Base Directory support
 - Shell completion (bash, zsh, fish, powershell)
 
