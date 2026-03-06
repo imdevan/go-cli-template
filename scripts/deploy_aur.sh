@@ -26,9 +26,27 @@ if [ -n "${AUR_SSH_KEY:-}" ]; then
 fi
 
 cd "${ROOT_DIR}/aur-${PACKAGE_NAME}"
+
+# Add AUR remote if not configured
+if ! git remote get-url origin &>/dev/null; then
+	echo "Adding AUR remote..."
+	git remote add origin "ssh://aur@aur.archlinux.org/${PACKAGE_NAME}.git"
+fi
+
 GIT_SSH_COMMAND="${SSH_CMD}" git add PKGBUILD .SRCINFO
-git commit -m "Update ${PACKAGE_NAME} to v${VERSION}"
-GIT_SSH_COMMAND="${SSH_CMD}" git push
+
+# Only commit if there are staged changes
+if ! git diff --cached --quiet; then
+	git commit -m "Update ${PACKAGE_NAME} to v${VERSION}"
+fi
+
+# Use -u on first push to set upstream tracking
+if git rev-parse --abbrev-ref --symbolic-full-name @{u} &>/dev/null 2>&1; then
+	GIT_SSH_COMMAND="${SSH_CMD}" git push
+else
+	echo "First push — setting upstream..."
+	GIT_SSH_COMMAND="${SSH_CMD}" git push -u origin master
+fi
 
 echo "✅ AUR package deployed!"
 echo "   https://aur.archlinux.org/packages/${PACKAGE_NAME}"
