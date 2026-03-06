@@ -10,13 +10,13 @@ PACKAGE_FILE="${ROOT_DIR}/internal/package/package.toml"
 DOCS_API_DIR="${ROOT_DIR}/docs/src/content/docs/api"
 DOCS_CONFIG="${ROOT_DIR}/docs/config.mjs"
 DOCS_SIDEBAR="${ROOT_DIR}/docs/sidebar.mjs"
-CMD_DIR="${ROOT_DIR}/cmd/bookmark"
 
 # Source shared utilities
 . "${ROOT_DIR}/scripts/lib.sh"
 
 echo "📦 Reading package metadata..."
 PROJECT_NAME=$(parse_toml_key "$PACKAGE_FILE" "name")
+CMD_DIR="${ROOT_DIR}/cmd/${PROJECT_NAME}"
 DESCRIPTION=$(parse_toml_key "$PACKAGE_FILE" "description")
 DOCS_SITE=$(parse_toml_key "$PACKAGE_FILE" "docs_site")
 DOCS_BASE=$(parse_toml_key "$PACKAGE_FILE" "docs_base")
@@ -198,7 +198,7 @@ fi
 mkdir -p "${DOCS_CONTENT_DIR}/commands"
 
 # Generate root command page from root.go
-if [ -f "cmd/bookmark/root.go" ]; then
+if [ -f "${CMD_DIR}/root.go" ]; then
   # For root command, use the description from package.toml
   ROOT_SHORT="${DESCRIPTION}"
 
@@ -221,7 +221,7 @@ if [ -f "cmd/bookmark/root.go" ]; then
         comment = comment "\n" $0
       }
     }
-  ' "cmd/bookmark/root.go")
+  ' "${CMD_DIR}/root.go")
 
   cat >"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md" <<EOF
 ---
@@ -256,19 +256,19 @@ EOF
         flag_long = arr[2]
         flag_short = arr[3]
         flag_desc = arr[4]
-        
+
         if (flag_short != "") {
           flag_col = "-" flag_short ", --" flag_long
         } else {
           flag_col = "--" flag_long
         }
-        
+
         type_col = tolower(flag_type)
-        
+
         print "| `" flag_col "` | " type_col " | " flag_desc " |"
       }
     }
-  ' "cmd/bookmark/root.go")
+  ' "${CMD_DIR}/root.go")
 
   # Add flags table if flags were found
   if [ -n "$root_flags" ]; then
@@ -308,7 +308,7 @@ EOF
 
 ## Source
 
-See [root.go](${REPOSITORY}/blob/main/cmd/bookmark/root.go) for implementation details.
+See [root.go](${REPOSITORY}/blob/main/cmd/${PROJECT_NAME}/root.go) for implementation details.
 EOF
 
   echo "  ✓ Generated commands/${PROJECT_NAME}.md"
@@ -431,7 +431,7 @@ EOF
 
 ## Source
 
-See [$(basename "$cmd_file")](${REPOSITORY}/blob/main/cmd/bookmark/$(basename "$cmd_file")) for implementation details.
+See [$(basename "$cmd_file")](${REPOSITORY}/blob/main/cmd/${PROJECT_NAME}/$(basename "$cmd_file")) for implementation details.
 EOF
 
   echo "  ✓ Generated commands/${cmd_url}.md"
