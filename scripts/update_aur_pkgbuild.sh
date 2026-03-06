@@ -10,9 +10,7 @@ PACKAGE_TOML="${ROOT_DIR}/internal/package/package.toml"
 
 VERSION="${1:-}"
 if [[ -z "${VERSION}" ]]; then
-  echo "Usage: $0 VERSION"
-  echo "Example: $0 0.2.0"
-  exit 1
+  VERSION="$(parse_toml_key "${PACKAGE_TOML}" "version")"
 fi
 
 # Remove 'v' prefix if present
@@ -94,9 +92,6 @@ echo "✅ Updated PKGBUILD: ${PKGBUILD_PATH}"
 echo ""
 echo "Next steps:"
 echo "1. Test the package locally:"
-echo "   cd ${AUR_DIR}"
-echo "   makepkg -si"
-echo "2. Commit and push:"
-echo "   git add PKGBUILD .SRCINFO"
-echo "   git commit -m \"Update ${PACKAGE_NAME} to v${VERSION}\""
-echo "   git push"
+echo "   cd ${AUR_DIR} && makepkg -si"
+echo "2. Deploy to AUR:"
+echo "   just deploy-aur ${VERSION}"
