@@ -1,4 +1,4 @@
-module bookmark
+module go-cli-template
 
 go 1.25.6
 
