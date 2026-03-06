@@ -19,7 +19,7 @@ use bun. do not use npm
 - File naming: `*_test.go` for tests, `snake_case` for scripts.
 - Package naming: lowercase, no underscores; exported identifiers in PascalCase.
 - Use internal/ui/ packages for ui elements
-- Use https://github.com/charmbracelet/ packages as much as possible for input and output
+- Use bubble tea/bubbles/lipgloss for ui elements
 - Use bubble tea tui inline options. Do not create a full screen tui
 
 ## Testing Guidelines
@@ -28,6 +28,6 @@ use bun. do not use npm
 - Run tests with `just test
 
 ## Agent-Specific Instructions
-- Use just over just see justfile
-- When adding new CLI flags or templates, update `README.md` and `example-config.toml`.
+- Don't use make. Use just. See justfile.
+- When adding new CLI flags or templates, update `README.md`, `example-config.toml`, `config_init.go`.
 - Prefer Bubble Tea/Bubbles for interactive UI elements.
