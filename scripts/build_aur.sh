@@ -7,6 +7,9 @@ OUTPUT_DIR="${ROOT_DIR}/dist/aur"
 OUTPUT_PATH="${OUTPUT_DIR}/PKGBUILD"
 PACKAGE_TOML="${ROOT_DIR}/package.toml"
 
+# Source shared utilities
+. "${ROOT_DIR}/scripts/lib.sh"
+
 VERSION="${VERSION:-}"
 if [[ -z "${VERSION}" ]]; then
   VERSION="$(git -C "${ROOT_DIR}" describe --tags --abbrev=0 2>/dev/null)"
@@ -17,7 +20,7 @@ PKGVER="${VERSION#v}"
 # Read repository URL from package.toml
 REPO_URL=""
 if [[ -f "${PACKAGE_TOML}" ]]; then
-  REPO_URL="$(grep '^repository = ' "${PACKAGE_TOML}" | sed 's/^repository = "\(.*\)"$/\1/' | tr -d '\n')"
+  REPO_URL="$(parse_toml_key "${PACKAGE_TOML}" "repository")"
 fi
 
 SOURCE_URL="${AUR_SOURCE_URL:-}"

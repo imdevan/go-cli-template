@@ -10,7 +10,11 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-PACKAGE_FILE="internal/package/package.toml"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PACKAGE_FILE="${ROOT_DIR}/internal/package/package.toml"
+
+# Source shared utilities
+. "${ROOT_DIR}/scripts/lib.sh"
 
 if [ ! -f "$PACKAGE_FILE" ]; then
   echo -e "${RED}Error: $PACKAGE_FILE not found${NC}"
@@ -21,19 +25,13 @@ echo -e "${GREEN}Syncing project from package.toml${NC}"
 echo "===================================="
 echo ""
 
-# Parse package.toml using grep and sed
-parse_toml() {
-  local key=$1
-  grep "^$key = " "$PACKAGE_FILE" | sed 's/^[^=]*= *"\(.*\)"$/\1/'
-}
-
-PROJECT_NAME=$(parse_toml "name")
-MODULE_NAME=$(parse_toml "module")
-DESCRIPTION=$(parse_toml "description")
-SHORT_DESC=$(parse_toml "short")
-VERSION=$(parse_toml "version")
-HOMEPAGE=$(parse_toml "homepage")
-AUTHOR=$(parse_toml "author")
+PROJECT_NAME=$(parse_toml_key "$PACKAGE_FILE" "name")
+MODULE_NAME=$(parse_toml_key "$PACKAGE_FILE" "module")
+DESCRIPTION=$(parse_toml_key "$PACKAGE_FILE" "description")
+SHORT_DESC=$(parse_toml_key "$PACKAGE_FILE" "short")
+VERSION=$(parse_toml_key "$PACKAGE_FILE" "version")
+HOMEPAGE=$(parse_toml_key "$PACKAGE_FILE" "homepage")
+AUTHOR=$(parse_toml_key "$PACKAGE_FILE" "author")
 
 if [ -z "$PROJECT_NAME" ]; then
   echo -e "${RED}Error: 'name' is required in $PACKAGE_FILE${NC}"
