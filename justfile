@@ -14,9 +14,6 @@ watch:
 dev-build:
 	go build -gcflags "all=-N -l" -o bin/go-cli-template ./cmd/go-cli-template
 
-cross-platform:
-	./scripts/build.sh
-
 build-aur:
 	./scripts/build_aur.sh
 
