@@ -47,7 +47,7 @@ docs-generate:
 docs-dev:
 	@echo "🚀 Starting documentation development server..."
 	@just docs-generate
-	cd docs && bun run dev
+	find . \( -name "*.md" -o -name "*.go" -o -name "package.toml" \) ! -path "*/node_modules/*" ! -path "*/docs/src/content/docs/*" ! -path "*/.git/*" | entr -rn just docs-generate & cd docs && bun run dev
 
 docs-build:
 	@echo "🏗️  Building documentation site..."

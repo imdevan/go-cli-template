@@ -443,11 +443,11 @@ if ! command -v gomarkdoc &>/dev/null; then
   go install github.com/princjef/gomarkdoc/cmd/gomarkdoc@latest
 fi
 
-echo "🧹 Cleaning old API docs..."
-rm -rf "$DOCS_API_DIR"
-mkdir -p "$DOCS_API_DIR"
-
 echo "📝 Generating API documentation..."
+
+# Generate into a temp directory to avoid Astro seeing a partially-written api/ dir
+DOCS_API_TEMP="$(mktemp -d)"
+trap 'rm -rf "$DOCS_API_TEMP"' EXIT
 
 # Generate docs for each internal package
 for pkg in internal/*/; do
@@ -462,7 +462,7 @@ for pkg in internal/*/; do
 
   # Generate to temp file first
   gomarkdoc \
-    --output "/tmp/${pkg_name}.md" \
+    --output "${DOCS_API_TEMP}/${pkg_name}.raw.md" \
     --template-file "file=${ROOT_DIR}/docs/templates/file.gotxt" \
     --footer $'## Source\n\nSee [internal/'"${pkg_name}"$'/]('"${REPOSITORY}"$'/blob/main/internal/'"${pkg_name}"$'/) for implementation details.' \
     "./$pkg" 2>/dev/null || {
@@ -477,14 +477,14 @@ for pkg in internal/*/; do
     echo "description: API documentation for the ${pkg_name} package"
     echo "---"
     echo ""
-    # Skip HTML comment and any frontmatter that gomarkdoc added
-    sed '1,/^# /d' "/tmp/${pkg_name}.md"
-  } >"$DOCS_API_DIR/${pkg_name}.md"
+    sed '1,/^# /d' "${DOCS_API_TEMP}/${pkg_name}.raw.md"
+  } >"${DOCS_API_TEMP}/${pkg_name}.md"
+  rm -f "${DOCS_API_TEMP}/${pkg_name}.raw.md"
 done
 
 # Generate docs for adapters
 echo "  - Processing adapters..."
-mkdir -p "$DOCS_API_DIR/adapters"
+mkdir -p "${DOCS_API_TEMP}/adapters"
 
 for adapter in internal/adapters/*/; do
   adapter_name=$(basename "$adapter")
@@ -492,7 +492,7 @@ for adapter in internal/adapters/*/; do
 
   # Generate to temp file first
   gomarkdoc \
-    --output "/tmp/adapter_${adapter_name}.md" \
+    --output "${DOCS_API_TEMP}/adapters/${adapter_name}.raw.md" \
     --template-file "file=${ROOT_DIR}/docs/templates/file.gotxt" \
     --footer $'## Source\n\nSee [internal/adapters/'"${adapter_name}"$'/]('"${REPOSITORY}"$'/blob/main/internal/adapters/'"${adapter_name}"$'/) for implementation details.' \
     "./$adapter" 2>/dev/null || {
@@ -507,10 +507,15 @@ for adapter in internal/adapters/*/; do
     echo "description: API documentation for the ${adapter_name} adapter"
     echo "---"
     echo ""
-    # Skip HTML comment and any frontmatter that gomarkdoc added
-    sed '1,/^# /d' "/tmp/adapter_${adapter_name}.md"
-  } >"$DOCS_API_DIR/adapters/${adapter_name}.md"
+    sed '1,/^# /d' "${DOCS_API_TEMP}/adapters/${adapter_name}.raw.md"
+  } >"${DOCS_API_TEMP}/adapters/${adapter_name}.md"
+  rm -f "${DOCS_API_TEMP}/adapters/${adapter_name}.raw.md"
 done
+
+# Atomically swap in the newly generated api/ directory
+rm -rf "$DOCS_API_DIR"
+mv "$DOCS_API_TEMP" "$DOCS_API_DIR"
+trap - EXIT
 
 echo "✅ API documentation generated successfully!"
 echo "📁 Output: $DOCS_API_DIR"
