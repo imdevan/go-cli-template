@@ -461,7 +461,11 @@ for pkg in internal/*/; do
   echo "  - Processing $pkg_name..."
 
   # Generate to temp file first
-  gomarkdoc --output "/tmp/${pkg_name}.md" "./$pkg" 2>/dev/null || {
+  gomarkdoc \
+    --output "/tmp/${pkg_name}.md" \
+    --template-file "file=${ROOT_DIR}/docs/templates/file.gotxt" \
+    --footer $'## Source\n\nSee [internal/'"${pkg_name}"$'/]('"${REPOSITORY}"$'/blob/main/internal/'"${pkg_name}"$'/) for implementation details.' \
+    "./$pkg" 2>/dev/null || {
     echo "    ⚠️  No exported symbols in $pkg_name"
     continue
   }
@@ -487,7 +491,11 @@ for adapter in internal/adapters/*/; do
   echo "    - Processing adapters/$adapter_name..."
 
   # Generate to temp file first
-  gomarkdoc --output "/tmp/adapter_${adapter_name}.md" "./$adapter" 2>/dev/null || {
+  gomarkdoc \
+    --output "/tmp/adapter_${adapter_name}.md" \
+    --template-file "file=${ROOT_DIR}/docs/templates/file.gotxt" \
+    --footer $'## Source\n\nSee [internal/adapters/'"${adapter_name}"$'/]('"${REPOSITORY}"$'/blob/main/internal/adapters/'"${adapter_name}"$'/) for implementation details.' \
+    "./$adapter" 2>/dev/null || {
     echo "      ⚠️  No exported symbols in $adapter_name"
     continue
   }
