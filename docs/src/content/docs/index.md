@@ -109,12 +109,50 @@ just docs-build    # Builds production site — API reference hidden for non-tem
 
 ## Architecture
 
-- `cmd/`              - CLI entrypoint and commands
-- `internal/config`   - Configuration management
-- `internal/domain`   - Domain models
-- `internal/ui`       - Bubble Tea UI components
-- `internal/utils`    - Utility functions
-- `internal/adapters` - External service adapters (editor, clipboard)
+Items marked `*` are updated by `just sync`.
+
+```
+.
+├── go.mod                      # Go packages       *
+├── justfile                    # Just run commands *
+├── README.md                   # You are here      *
+│
+├── cmd/                        # CLI commands
+│   └── go-cli-template/        # Renamed with just sync      *
+│       ├── main.go             # Binary entry point
+│       ├── root.go             # Root command, config wiring, app init
+│       ├── config.go           # `config` subcommand
+│       ├── config_init.go      # `config init` subcommand
+│       └── completion.go       # Shell completion subcommand *
+│
+└── internal/
+    ├── package/
+    │   └── package.toml        # Source of truth — edit this, then run just sync
+    │
+    ├── app/                    # Application bootstrap
+    ├── config/                 # Loads and parses config.toml
+    ├── domain/                 # Core types and data models
+    ├── errors/                 # Shared error types
+    ├── workflow/               # Business logic layer
+    ├── ui/                     # Bubble Tea TUI components
+    │   ├── list.go             # Interactive filterable list
+    │   ├── theme.go            # Color/style definitions
+    │   ├── confirmation.go     # Yes/no prompt
+    │   ├── textarea.go         # Multi-line text input
+    │   ├── help.go             # Help bar
+    │   ├── container.go        # Layout helpers
+    │   ├── exit_message.go     # Post-exit message rendering
+    │   └── responsive.go       # Terminal size utilities
+    ├── adapters/               # Thin wrappers around external interactions
+    │   ├── editor/             # Opens files in the user's configured editor
+    │   ├── clipboard/          # Read/write system clipboard
+    │   ├── shell/              # Shell command execution
+    │   ├── tty/                # TTY detection
+    │   └── icon/               # Nerd Font icon helpers
+    ├── utils/                  # Stateless helpers (paths, strings, fs, time)
+    ├── testutil/               # Shared test fixtures and helpers
+    └── package/                # Reads package.toml metadata at runtime
+```
 
 ## Commands
 
