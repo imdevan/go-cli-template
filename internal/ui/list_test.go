@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/charmbracelet/bubbles/list"
@@ -109,60 +110,81 @@ func TestNewListDelegate(t *testing.T) {
 	t.Run("default spacing", func(t *testing.T) {
 		opts := ListDelegateOptions{}
 		delegate := NewListDelegate(theme, opts)
+		
+		// Cast to DefaultDelegate to access fields
+		dd, ok := delegate.(list.DefaultDelegate)
+		if !ok {
+			t.Fatal("Expected DefaultDelegate for non-metadata options")
+		}
 
-		if !delegate.ShowDescription {
+		if !dd.ShowDescription {
 			t.Error("ShowDescription should be true for default spacing")
 		}
-		if delegate.Height() != 2 {
-			t.Errorf("Height = %d, want 2 for default spacing", delegate.Height())
+		if dd.Height() != 2 {
+			t.Errorf("Height = %d, want 2 for default spacing", dd.Height())
 		}
-		if delegate.Spacing() != 1 {
-			t.Errorf("Spacing = %d, want 1 for default spacing", delegate.Spacing())
+		if dd.Spacing() != 1 {
+			t.Errorf("Spacing = %d, want 1 for default spacing", dd.Spacing())
 		}
 	})
 
 	t.Run("space spacing", func(t *testing.T) {
 		opts := ListDelegateOptions{Spacing: "space"}
 		delegate := NewListDelegate(theme, opts)
+		
+		dd, ok := delegate.(list.DefaultDelegate)
+		if !ok {
+			t.Fatal("Expected DefaultDelegate for non-metadata options")
+		}
 
-		if !delegate.ShowDescription {
+		if !dd.ShowDescription {
 			t.Error("ShowDescription should be true for space spacing")
 		}
-		if delegate.Height() != 2 {
-			t.Errorf("Height = %d, want 2 for space spacing", delegate.Height())
+		if dd.Height() != 2 {
+			t.Errorf("Height = %d, want 2 for space spacing", dd.Height())
 		}
-		if delegate.Spacing() != 1 {
-			t.Errorf("Spacing = %d, want 1 for space spacing", delegate.Spacing())
+		if dd.Spacing() != 1 {
+			t.Errorf("Spacing = %d, want 1 for space spacing", dd.Spacing())
 		}
 	})
 
 	t.Run("compact spacing", func(t *testing.T) {
 		opts := ListDelegateOptions{Spacing: "compact"}
 		delegate := NewListDelegate(theme, opts)
+		
+		dd, ok := delegate.(list.DefaultDelegate)
+		if !ok {
+			t.Fatal("Expected DefaultDelegate for non-metadata options")
+		}
 
-		if delegate.ShowDescription {
+		if dd.ShowDescription {
 			t.Error("ShowDescription should be false for compact spacing")
 		}
-		if delegate.Height() != 1 {
-			t.Errorf("Height = %d, want 1 for compact spacing", delegate.Height())
+		if dd.Height() != 1 {
+			t.Errorf("Height = %d, want 1 for compact spacing", dd.Height())
 		}
-		if delegate.Spacing() != 0 {
-			t.Errorf("Spacing = %d, want 0 for compact spacing", delegate.Spacing())
+		if dd.Spacing() != 0 {
+			t.Errorf("Spacing = %d, want 0 for compact spacing", dd.Spacing())
 		}
 	})
 
 	t.Run("tight spacing", func(t *testing.T) {
 		opts := ListDelegateOptions{Spacing: "tight"}
 		delegate := NewListDelegate(theme, opts)
+		
+		dd, ok := delegate.(list.DefaultDelegate)
+		if !ok {
+			t.Fatal("Expected DefaultDelegate for non-metadata options")
+		}
 
-		if !delegate.ShowDescription {
+		if !dd.ShowDescription {
 			t.Error("ShowDescription should be true for tight spacing")
 		}
-		if delegate.Height() != 2 {
-			t.Errorf("Height = %d, want 2 for tight spacing", delegate.Height())
+		if dd.Height() != 2 {
+			t.Errorf("Height = %d, want 2 for tight spacing", dd.Height())
 		}
-		if delegate.Spacing() != 0 {
-			t.Errorf("Spacing = %d, want 0 for tight spacing", delegate.Spacing())
+		if dd.Spacing() != 0 {
+			t.Errorf("Spacing = %d, want 0 for tight spacing", dd.Spacing())
 		}
 	})
 
@@ -181,15 +203,20 @@ func TestNewListDelegate(t *testing.T) {
 	t.Run("invalid spacing falls back to space", func(t *testing.T) {
 		opts := ListDelegateOptions{Spacing: "invalid"}
 		delegate := NewListDelegate(theme, opts)
+		
+		dd, ok := delegate.(list.DefaultDelegate)
+		if !ok {
+			t.Fatal("Expected DefaultDelegate for non-metadata options")
+		}
 
-		if !delegate.ShowDescription {
+		if !dd.ShowDescription {
 			t.Error("ShowDescription should be true for invalid spacing (fallback)")
 		}
-		if delegate.Height() != 2 {
-			t.Errorf("Height = %d, want 2 for invalid spacing (fallback)", delegate.Height())
+		if dd.Height() != 2 {
+			t.Errorf("Height = %d, want 2 for invalid spacing (fallback)", dd.Height())
 		}
-		if delegate.Spacing() != 1 {
-			t.Errorf("Spacing = %d, want 1 for invalid spacing (fallback)", delegate.Spacing())
+		if dd.Spacing() != 1 {
+			t.Errorf("Spacing = %d, want 1 for invalid spacing (fallback)", dd.Spacing())
 		}
 	})
 
@@ -199,16 +226,38 @@ func TestNewListDelegate(t *testing.T) {
 			SelectedPaddingLeft: 3,
 		}
 		delegate := NewListDelegate(theme, opts)
+		
+		dd, ok := delegate.(list.DefaultDelegate)
+		if !ok {
+			t.Fatal("Expected DefaultDelegate for non-metadata options")
+		}
 
 		// Check that padding was applied (styles should have padding set)
-		_, _, _, left := delegate.Styles.NormalTitle.GetPadding()
+		_, _, _, left := dd.Styles.NormalTitle.GetPadding()
 		if left != 2 {
 			t.Errorf("NormalTitle left padding = %d, want 2", left)
 		}
 
-		_, _, _, left = delegate.Styles.SelectedTitle.GetPadding()
+		_, _, _, left = dd.Styles.SelectedTitle.GetPadding()
 		if left != 3 {
 			t.Errorf("SelectedTitle left padding = %d, want 3", left)
+		}
+	})
+	
+	t.Run("metadata delegate", func(t *testing.T) {
+		opts := ListDelegateOptions{
+			ShowMetadata: true,
+		}
+		delegate := NewListDelegate(theme, opts)
+		
+		// Should return metadataDelegate, not DefaultDelegate
+		_, isDefault := delegate.(list.DefaultDelegate)
+		if isDefault {
+			t.Error("Expected metadataDelegate for ShowMetadata=true")
+		}
+		
+		if delegate.Height() != 3 {
+			t.Errorf("Height = %d, want 3 for metadata delegate", delegate.Height())
 		}
 	})
 }
@@ -310,6 +359,66 @@ func TestListDelegateOptions_Defaults(t *testing.T) {
 		// Should use defaults without panicking
 		if delegate.Height() == 0 {
 			t.Error("Height should have a default value")
+		}
+	})
+}
+
+// metadataTestItem implements list.DefaultItem and ItemWithMetadata for testing
+type metadataTestItem struct {
+	title       string
+	description string
+	metadata    string
+}
+
+func (t metadataTestItem) Title() string       { return t.title }
+func (t metadataTestItem) Description() string { return t.description }
+func (t metadataTestItem) FilterValue() string { return t.title + " " + t.description }
+func (t metadataTestItem) Metadata() string    { return t.metadata }
+
+func TestMetadataDelegate(t *testing.T) {
+	theme := Theme{
+		Primary:              lipgloss.Color("2"),
+		TextHighlight:        lipgloss.Color("11"),
+		DescriptionHighlight: lipgloss.Color("12"),
+	}
+
+	testItemImpl := metadataTestItem{
+		title:       "Test Item",
+		description: "Test Description",
+		metadata:    "icon metadata",
+	}
+
+	t.Run("item with metadata", func(t *testing.T) {
+		opts := ListDelegateOptions{
+			ShowMetadata: true,
+		}
+		delegate := NewListDelegate(theme, opts)
+
+		if delegate.Height() != 3 {
+			t.Errorf("Height = %d, want 3 for metadata delegate", delegate.Height())
+		}
+	})
+
+	t.Run("metadata wrapper", func(t *testing.T) {
+		wrapper := &metadataItemWrapper{
+			item:     testItemImpl,
+			metadata: "test metadata",
+			indent:   2,
+		}
+
+		if wrapper.Title() != "Test Item" {
+			t.Errorf("Title = %q, want %q", wrapper.Title(), "Test Item")
+		}
+
+		desc := wrapper.Description()
+		if !strings.Contains(desc, "Test Description") {
+			t.Error("Description should contain original description")
+		}
+		if !strings.Contains(desc, "test metadata") {
+			t.Error("Description should contain metadata")
+		}
+		if !strings.Contains(desc, "\n  test metadata") {
+			t.Error("Metadata should be indented with 2 spaces")
 		}
 	})
 }
