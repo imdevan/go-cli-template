@@ -13,11 +13,11 @@ A generic CLI tool template built with Go, Cobra, and Bubble Tea. This template 
 - [Inline Bubble Tea TUI components](https://github.com/charmbracelet/bubbletea)
 - Homebrew and aur package management with TOML too!
 - Automatic documentation with [gomarkdoc](https://github.com/princjef/gomarkdoc) and [astro starlight](https://starlight.astro.build/)
-  -
-- Just recipes to build and release to your favorite package manager
-  - If you're favorite package manager is homebrew or AUR 
-
+  - With automated github deployment workflow
+- [Just](https://just.systems/) recipes to build and release to your favorite package manager
+  - homebrew tap, AUR, Github release, and manual download are currently supported
 - XDG Base Directory support
+- Utils for NerdFont, and Editor interaction
 - Integration and unit tested
 - Shell completion (bash, zsh, fish, powershell)
 
