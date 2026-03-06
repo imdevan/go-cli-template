@@ -474,7 +474,7 @@ for pkg in internal/*/; do
     echo "---"
     echo ""
     # Skip HTML comment and any frontmatter that gomarkdoc added
-    sed -n '/^# /,$p' "/tmp/${pkg_name}.md"
+    sed '1,/^# /d' "/tmp/${pkg_name}.md"
   } >"$DOCS_API_DIR/${pkg_name}.md"
 done
 
@@ -500,7 +500,7 @@ for adapter in internal/adapters/*/; do
     echo "---"
     echo ""
     # Skip HTML comment and any frontmatter that gomarkdoc added
-    sed -n '/^# /,$p' "/tmp/adapter_${adapter_name}.md"
+    sed '1,/^# /d' "/tmp/adapter_${adapter_name}.md"
   } >"$DOCS_API_DIR/adapters/${adapter_name}.md"
 done
 
