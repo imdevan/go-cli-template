@@ -97,6 +97,9 @@ tag-list:
 release VERSION="":
 	./scripts/release.sh {{VERSION}}
 
+github-release VERSION="":
+	./scripts/github_release.sh {{VERSION}}
+
 deploy-aur VERSION="":
 	./scripts/deploy_aur.sh {{VERSION}}
 
