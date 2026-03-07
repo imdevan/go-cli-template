@@ -33,10 +33,22 @@ I then used this project to bootstrap [bookmark](https://devan.gg/bookmark), a g
 
 If you're here; those projects may also interest you! :)
 
+
+## Requirements
+
+- [Go]([https://go.dev/]) for doing the thing.
+- [Just](https://just.systems/) for running scripts.
+- [Bun](https://bun.sh/) for docs generation. Easily sub for `npm` if preferred.
+
 ## Quick start
 
 
 ```bash
+# Clone the repo
+gh repo clone imdevan/go-cli-template
+cd go-cli-template
+
+# Just build and run
 just build-run
 ```
 
@@ -149,7 +161,9 @@ Items marked `*` are updated by `just sync`.
     │   ├── shell/              # Shell command execution
     │   ├── tty/                # TTY detection
     │   └── icon/               # Nerd Font icon helpers
-    ├── utils/                  # Stateless helpers (paths, strings, fs, time)
+    ├── utils/                  # Stateless helpers
+    │   ├── paths.go            # XDG config/data/cache path resolution
+    │   └── time.go             # Time formatting helpers
     ├── testutil/               # Shared test fixtures and helpers
     └── package/                # Reads package.toml metadata at runtime
 ```
