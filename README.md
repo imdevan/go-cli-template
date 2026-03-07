@@ -23,7 +23,7 @@ A generic CLI tool template built with Go, Cobra, and Bubble Tea. This template 
 
 ## Author's Note
 
-This project was created after I made [prompter-cli](https://devan.gg/prompter-cli), a cli tool to organize prompts and skills. I wanted a reusable way to recreate go cli tools that were fast and looked pretty.
+This project was created by deconstructing another cli tool I created: [prompter-cli](https://devan.gg/prompter-cli), a cli tool to organize prompts and skills. I wanted a reusable way to create go cli tools that were fast and looked pretty.
 
 I then used this project to bootstrap [bookmark](https://devan.gg/bookmark), a go based approach to organize shell aliases. I then took what I learned building bookmark and incorporated those learnings back into this project. 
 
