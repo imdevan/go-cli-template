@@ -55,4 +55,6 @@ if (!isProduction || projectName === 'go-cli-template') {
   sidebar.push(apiReference);
 }
 
+sidebar.push({ label: 'Contributing', link: '/contributing' });
+
 export default sidebar;
