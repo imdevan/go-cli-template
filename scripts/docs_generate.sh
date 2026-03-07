@@ -121,6 +121,12 @@ ${API_ADAPTERS}        ],
   },"
 fi
 
+# Conditionally include Contributing in sidebar
+CONTRIBUTING_SIDEBAR=""
+if [ -f "${ROOT_DIR}/CONTRIBUTING.md" ]; then
+  CONTRIBUTING_SIDEBAR="sidebar.push({ label: 'Contributing', link: '/contributing' });"
+fi
+
 # Generate sidebar.mjs with dynamic environment check
 cat >"$DOCS_SIDEBAR" <<EOF
 import config from './config.mjs';
@@ -164,6 +170,7 @@ if (!isProduction || projectName === 'go-cli-template') {
   sidebar.push(apiReference);
 }
 
+${CONTRIBUTING_SIDEBAR}
 export default sidebar;
 EOF
 
@@ -192,6 +199,13 @@ if [ -f "CONFIG.md" ]; then
   convert_with_frontmatter "CONFIG.md" "${DOCS_CONTENT_DIR}/configuration.md" \
     "Configuration" "Configuration options for ${PROJECT_NAME}"
   echo "  ✓ Generated configuration.md from CONFIG.md"
+fi
+
+# Generate contributing page from CONTRIBUTING.md
+if [ -f "CONTRIBUTING.md" ]; then
+  convert_with_frontmatter "CONTRIBUTING.md" "${DOCS_CONTENT_DIR}/contributing.md" \
+    "Contributing" "Contributing to ${PROJECT_NAME}"
+  echo "  ✓ Generated contributing.md from CONTRIBUTING.md"
 fi
 
 # Create commands directory
