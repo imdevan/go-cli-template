@@ -71,7 +71,7 @@ init-aur-repo:
 	@echo "📦 Initializing AUR repository..."
 	./scripts/init_aur_repo.sh
 
-update-homebrew-formula VERSION:
+update-homebrew-formula VERSION="":
 	@echo "🍺 Updating Homebrew formula to version {{VERSION}}..."
 	./scripts/update_homebrew_formula.sh {{VERSION}}
 

@@ -10,9 +10,7 @@ PACKAGE_TOML="${ROOT_DIR}/internal/package/package.toml"
 
 VERSION="${1:-}"
 if [[ -z "${VERSION}" ]]; then
-	echo "Usage: $0 VERSION"
-	echo "Example: $0 0.2.0"
-	exit 1
+	VERSION=$(parse_toml_key "${PACKAGE_TOML}" "version")
 fi
 
 # Remove 'v' prefix if present
@@ -26,6 +24,7 @@ PACKAGE_NAME="${PACKAGE_NAME:-$NAME}"
 REPO_URL="$(parse_toml_key "${PACKAGE_TOML}" "repository")"
 DESCRIPTION="$(parse_toml_key "${PACKAGE_TOML}" "description")"
 HOMEPAGE="$(parse_toml_key "${PACKAGE_TOML}" "homepage")"
+GITHUB_USER="$(echo "${REPO_URL}" | sed -E 's|https://github.com/([^/]+)/.*|\1|')"
 
 TAP_DIR="${ROOT_DIR}/homebrew-${PACKAGE_NAME}"
 FORMULA_PATH="${TAP_DIR}/Formula/${PACKAGE_NAME}.rb"
@@ -74,9 +73,8 @@ echo "✅ Updated formula: ${FORMULA_PATH}"
 echo ""
 echo "Next steps:"
 echo "1. Test the formula locally:"
-echo "   brew install --build-from-source ${FORMULA_PATH}"
-echo "2. Commit and push:"
-echo "   cd ${TAP_DIR}"
-echo "   git add Formula/${PACKAGE_NAME}.rb"
-echo "   git commit -m \"Update ${PACKAGE_NAME} to v${VERSION}\""
-echo "   git push"
+echo "   brew tap ${GITHUB_USER}/homebrew-${PACKAGE_NAME} ${TAP_DIR}"
+echo "   brew install --build-from-source ${PACKAGE_NAME}"
+echo "   brew untap ${GITHUB_USER}/homebrew-${PACKAGE_NAME}"
+echo "2. Deploy:"
+echo "   just deploy-homebrew"
