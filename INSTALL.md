@@ -4,6 +4,8 @@ This template is currently setup to build and deploy to homebrew and AUR.
 
 Because that is what I use so that that is what I have capacity to test at the moment. 
 
+This package `go-cli-template` is built and actually deployed to homebrew and aur to demonstrate the usage of the deployment scripts. 
+
 ## Homebrew
 ```bash
 brew install imdevan/go-cli-template/go-cli-template
