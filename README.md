@@ -88,7 +88,7 @@ After syncing, add your own commands under `cmd/`, domain types under `internal/
 
 Documentation is built with [Astro Starlight](https://starlight.astro.build/) and lives in `docs/`. Content is generated automatically from the Go source and project markdown files — you generally don't edit `docs/src/content/docs/` by hand.
 
-However you can easily customize the look of your docs by editing the styles located in `docs/src/styles/custom.css`.j
+However you can easily customize the look of your docs by editing the styles located in `docs/src/styles/custom.css`.
 
 ### How docs are generated
 
