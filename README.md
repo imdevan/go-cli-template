@@ -103,7 +103,7 @@ They contain the documentation for the development of the project; they are not 
 ### readme, install, config, and contributing
 
 These pages are pulled whole sale from the markdown files in the project. 
-Frontmatter is added to play nice with Startlight
+Frontmatter is added to play nice with Startlight.
 
 ### Commands `cmd`
 
