@@ -35,16 +35,35 @@ if [[ ! -d "${AUR_DIR}" ]]; then
   exit 1
 fi
 
-# Download tarball and calculate SHA256
-TARBALL_URL="${REPO_URL}archive/refs/tags/v${VERSION}.tar.gz"
-echo "📥 Downloading release tarball..."
+# Helper to get SHA256 of binary assets
+get_platform_sha() {
+  local platform="$1"
+  local ext="${2:-tar.gz}"
+  local local_file="${ROOT_DIR}/dist/v${VERSION}/${NAME}-${platform}.${ext}"
+  local clean_repo="${REPO_URL%/}"
+  local repo_path="${clean_repo#https://github.com/}"
+  local url="https://github.com/${repo_path}/releases/download/v${VERSION}/${NAME}-${platform}.${ext}"
+  
+  if [[ -f "${local_file}" ]]; then
+    sha256sum "${local_file}" | awk '{print $1}'
+  else
+    echo "📥 Downloading to calculate hash for ${platform}..." >&2
+    if ! sha=$(download_and_hash "${url}"); then
+      echo "❌ Failed to download: ${url}" >&2
+      exit 1
+    fi
+    echo "${sha}"
+  fi
+}
 
-if ! SHA256=$(download_and_hash "${TARBALL_URL}"); then
-  echo "❌ Failed to download: ${TARBALL_URL}"
-  exit 1
-fi
+echo "🔍 Calculating SHA256 hashes for binary assets..."
+LINUX_AMD64_SHA=$(get_platform_sha "linux-amd64")
+LINUX_ARM64_SHA=$(get_platform_sha "linux-arm64")
 
-echo "✅ SHA256: ${SHA256}"
+CLEAN_REPO="${REPO_URL%/}"
+REPO_PATH="${CLEAN_REPO#https://github.com/}"
+LINUX_AMD64_URL="https://github.com/${REPO_PATH}/releases/download/v${VERSION}/${NAME}-linux-amd64.tar.gz"
+LINUX_ARM64_URL="https://github.com/${REPO_PATH}/releases/download/v${VERSION}/${NAME}-linux-arm64.tar.gz"
 
 # Update PKGBUILD
 cat >"${PKGBUILD_PATH}" <<EOF
@@ -58,22 +77,17 @@ arch=('x86_64' 'aarch64')
 url="${HOMEPAGE}"
 license=('MIT')
 depends=()
-makedepends=('go')
-source=("\${_binname}-\${pkgver}.tar.gz::${TARBALL_URL}")
-sha256sums=('${SHA256}')
 
-build() {
-  cd "\${_binname}-\${pkgver}"
-  export CGO_ENABLED=0
-  export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
-  go build -ldflags="-s -w" -o \${_binname} ./cmd/\${_binname}
-}
+source_x86_64=("\${_binname}-linux-amd64-\${pkgver}.tar.gz::${LINUX_AMD64_URL}")
+source_aarch64=("\${_binname}-linux-arm64-\${pkgver}.tar.gz::${LINUX_ARM64_URL}")
+sha256sums_x86_64=('${LINUX_AMD64_SHA}')
+sha256sums_aarch64=('${LINUX_ARM64_SHA}')
 
 package() {
-  cd "\${_binname}-\${pkgver}"
-  install -Dm755 \${_binname} "\${pkgdir}/usr/bin/\${_binname}"
-  if [ -f LICENSE ]; then
-    install -Dm644 LICENSE "\${pkgdir}/usr/share/licenses/\${pkgname}/LICENSE"
+  if [ "\${CARCH}" = "x86_64" ]; then
+    install -Dm755 "\${srcdir}/\${_binname}-linux-amd64" "\${pkgdir}/usr/bin/\${_binname}"
+  elif [ "\${CARCH}" = "aarch64" ]; then
+    install -Dm755 "\${srcdir}/\${_binname}-linux-arm64" "\${pkgdir}/usr/bin/\${_binname}"
   fi
 }
 EOF

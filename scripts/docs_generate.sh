@@ -379,6 +379,11 @@ for cmd_file in "$CMD_DIR"/*.go; do
     cmd_use="$cmd_display"
   fi
 
+  # Use display name if Short is empty
+  if [ -z "$cmd_short" ]; then
+    cmd_short="$cmd_display"
+  fi
+
   # Generate command documentation
   cat >"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md" <<EOF
 ---
