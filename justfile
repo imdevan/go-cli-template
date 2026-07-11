@@ -6,20 +6,22 @@ PACKAGE := "go-cli-template"
 PACKAGE_BIN := "./bin/" + PACKAGE
 PACKAGE_CMD := "./cmd/" + PACKAGE
 
-cli_docs := "bin/go-cli-docs"
+cli_docs := "bin/go-cli-template"
 cli_pack := "bin/go-cli-package"
 
 _install-docs:
-	@if [ ! -f ./bin/go-cli-docs ]; then \
+	@if [ ! -f ./bin/go-cli-template ]; then \
 		echo "📥 Installing go-cli-docs..."; \
-		GOBIN="{{justfile_directory()}}/bin" go install github.com/imdevan/go-cli-docs/cmd/go-cli-docs@latest; \
+		GOBIN="{{justfile_directory()}}/bin" "$(go env GOROOT)/bin/go" install github.com/imdevan/go-cli-docs/cmd/go-cli-docs@latest; \
 	fi
 
 _install-pack:
 	@if [ ! -f ./bin/go-cli-package ]; then \
 		echo "📥 Installing go-cli-package..."; \
-		GOBIN="{{justfile_directory()}}/bin" go install github.com/imdevan/go-cli-package/cmd/go-cli-package@latest; \
+		GOBIN="{{justfile_directory()}}/bin" "$(go env GOROOT)/bin/go" install github.com/imdevan/go-cli-package/cmd/go-cli-package@latest; \
 	fi
+
+
 
 # Build
 # ================================================================================
@@ -38,9 +40,11 @@ watch:
 dev-build:
 	go build -gcflags "all=-N -l" -o {{PACKAGE_BIN}} {{PACKAGE_CMD}}
 
+# Install local build globally
 install:
 	install -m 0755 {{PACKAGE_BIN}} /usr/local/bin/{{PACKAGE}}
 
+# Uninstall local build globally
 uninstall:
 	rm -f /usr/local/bin/{{PACKAGE}}
 
@@ -80,6 +84,10 @@ docs-clean:
 # Package management
 # ================================================================================
 
+# Rename template based on internal/package/package.toml or pass --package 
+sync args="":
+  {{cli_pack}} sync {{args}}
+
 # Github tag management
 
 tag-list: build _install-pack
@@ -95,9 +103,6 @@ tag-delete version="": build _install-pack
 
 release version="": build _install-pack
 	{{cli_pack}} release {{version}}
-
-publish version="": (release version)
-
 
 # Pipeline init
 
@@ -136,5 +141,6 @@ deploy version="": build _install-pack
 # aliases
 publish-homebrew version="": (deploy-homebrew version)
 publish-aur version="": (deploy-aur version)
+deploy version="": (tag version) ()
 
 
