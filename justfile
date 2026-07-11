@@ -6,9 +6,20 @@ PACKAGE := "go-cli-template"
 PACKAGE_BIN := "./bin/" + PACKAGE
 PACKAGE_CMD := "./cmd/" + PACKAGE
 
-_install-docs: 
+cli_docs := "bin/go-cli-docs"
+cli_pack := "bin/go-cli-package"
+
+_install-docs:
+	@if [ ! -f ./bin/go-cli-docs ]; then \
+		echo "📥 Installing go-cli-docs..."; \
+		GOBIN="{{justfile_directory()}}/bin" go install github.com/imdevan/go-cli-docs/cmd/go-cli-docs@latest; \
+	fi
 
 _install-pack:
+	@if [ ! -f ./bin/go-cli-package ]; then \
+		echo "📥 Installing go-cli-package..."; \
+		GOBIN="{{justfile_directory()}}/bin" go install github.com/imdevan/go-cli-package/cmd/go-cli-package@latest; \
+	fi
 
 # Build
 # ================================================================================
