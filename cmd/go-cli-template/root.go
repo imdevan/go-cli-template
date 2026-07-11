@@ -55,7 +55,19 @@ func newRootCmd() *cobra.Command {
 		},
 	}
 
+	// @docs-flag-group
+	//
+	// 	name: Config
+	// 	description:
+	//
+	// 		Define a config.toml file to use instead of the global one.
+	//	flags: config
 	cmd.Flags().StringVarP(&opts.configPath, "config", "c", "", "config file path")
+
+	// @docs-flag-group
+	//
+	// 	name: Meta
+	//	flags: version
 	cmd.Flags().BoolVarP(&opts.showVersion, "version", "v", false, "print version information")
 
 	cmd.AddCommand(newConfigCmd())
