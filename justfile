@@ -3,7 +3,7 @@
 set shell := ["zsh", "-cu"]
 
 PACKAGE := "go-cli-template"
-PACKAGE_BIN := "./bin/" + PACKAGE
+cli_pack := "./bin/" + PACKAGE
 PACKAGE_CMD := "./cmd/" + PACKAGE
 
 cli_docs := "bin/go-cli-template"
@@ -27,22 +27,22 @@ _install-pack:
 # ================================================================================
 
 build:
-	go build -o {{PACKAGE_BIN}} {{PACKAGE_CMD}}
-	@size=$(stat -c %s {{PACKAGE_BIN}} 2>/dev/null || stat -f %z {{PACKAGE_BIN}} 2>/dev/null); \
+	go build -o {{cli_pack}} {{PACKAGE_CMD}}
+	@size=$(stat -c %s {{cli_pack}} 2>/dev/null || stat -f %z {{cli_pack}} 2>/dev/null); \
 	echo "Build size: $(awk "BEGIN {printf \"%.2f MB\", $size/1048576}")"
 
 build-run:
-	go build -o {{PACKAGE_BIN}} {{PACKAGE_CMD}} && {{PACKAGE_BIN}}
+	go build -o {{cli_pack}} {{PACKAGE_CMD}} && {{cli_pack}}
 
 watch:
-	@rg --files | entr -r sh -c 'sleep 0.5; go build -o {{PACKAGE_BIN}} {{PACKAGE_CMD}}'
+	@rg --files | entr -r sh -c 'sleep 0.5; go build -o {{cli_pack}} {{PACKAGE_CMD}}'
 
 dev-build:
-	go build -gcflags "all=-N -l" -o {{PACKAGE_BIN}} {{PACKAGE_CMD}}
+	go build -gcflags "all=-N -l" -o {{cli_pack}} {{PACKAGE_CMD}}
 
 # Install local build globally
 install:
-	install -m 0755 {{PACKAGE_BIN}} /usr/local/bin/{{PACKAGE}}
+	install -m 0755 {{cli_pack}} /usr/local/bin/{{PACKAGE}}
 
 # Uninstall local build globally
 uninstall:
@@ -127,20 +127,15 @@ update version="": build _install-pack
 	{{cli_pack}} update all {{version}}
 
 
-# Deploy
+# Publish
 
-deploy-homebrew version="": build _install-pack
-	{{cli_pack}} deploy homebrew {{version}}
+publish-homebrew version="": build
+	{{cli_pack}} publish homebrew {{version}}
 
-deploy-aur version="": build _install-pack
-	{{cli_pack}} deploy aur {{version}}
+publish-aur version="": build
+	{{cli_pack}} publish aur {{version}}
 
-deploy version="": build _install-pack
-	{{cli_pack}} deploy all {{version}}
-
-# aliases
-publish-homebrew version="": (deploy-homebrew version)
-publish-aur version="": (deploy-aur version)
-deploy version="": (tag version) ()
+publish version="": build
+	{{cli_pack}} publish all {{version}}
 
 
