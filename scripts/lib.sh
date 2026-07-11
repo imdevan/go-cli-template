@@ -23,37 +23,3 @@ download_and_hash() {
   sha256sum "$temp_file" | awk '{print $1}'
   rm -f "$temp_file"
 }
-# Add YAML frontmatter to a markdown file
-# Usage: add_frontmatter <output_file> <title> <description>
-add_frontmatter() {
-  local output_file=$1
-  local title=$2
-  local description=$3
-  
-  {
-    echo "---"
-    echo "title: ${title}"
-    echo "description: ${description}"
-    echo "---"
-    echo ""
-  } > "$output_file"
-}
-
-# Add frontmatter and skip first heading from source file
-# Usage: convert_with_frontmatter <source_file> <output_file> <title> <description>
-convert_with_frontmatter() {
-  local source_file=$1
-  local output_file=$2
-  local title=$3
-  local description=$4
-  
-  {
-    echo "---"
-    echo "title: ${title}"
-    echo "description: ${description}"
-    echo "---"
-    echo ""
-    # Skip the first heading from source and output the rest
-    sed '1{/^# /d;}' "$source_file"
-  } > "$output_file"
-}
