@@ -6,7 +6,7 @@ PACKAGE := "go-cli-template"
 PACKAGE_BIN := "./bin/" + PACKAGE
 PACKAGE_CMD := "./cmd/" + PACKAGE
 
-cli_docs := "bin/go-cli-template"
+cli_docs := "bin/go-cli-docs"
 cli_pack := "bin/go-cli-package"
 
 _install-docs:
