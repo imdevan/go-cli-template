@@ -124,7 +124,7 @@ Build docs for production.
 
 #### just docs-generate
 
-Running `just docs-generate` (or implicitly via `just docs-dev` / `just docs-build`) runs `scripts/docs_generate.sh`, which:
+Running `just docs-generate` (or implicitly via `just docs-dev` / `just docs-build`) runs `go-cli-docs generate`, which:
 
 1. **Reads `internal/package/package.toml`** and writes `docs/config.mjs` and `docs/sidebar.mjs` with the current project name, description, repository URL, and base path.
 2. **Imports markdown files** from the repository root:
