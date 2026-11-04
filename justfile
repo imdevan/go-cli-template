@@ -85,7 +85,7 @@ docs-clean:
 # ================================================================================
 
 # Rename template based on internal/package/package.toml or pass --package 
-sync args="":
+sync args="": _install-pack
   {{cli_pack}} sync {{args}}
 
 # Github tag management
